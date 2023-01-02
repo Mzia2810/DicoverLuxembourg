@@ -1,0 +1,54 @@
+{
+	"info": {
+		"_postman_id": "895098a6-a79b-40d5-ba2e-9f7873cbb16b",
+		"name": "Lexumbourg",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Historical Places",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get_historical_palces",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get_historical_palces"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://lexumbourg.etradeverse.com",
+			"type": "default"
+		}
+	]
+}
