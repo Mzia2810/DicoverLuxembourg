@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, Text } from "react-native";
 import { AttractionInfoCard } from "../components/attractions-info-component";
 
 export const HomeScreen = () => {
@@ -11,10 +11,10 @@ export const HomeScreen = () => {
     async function fetchData() {
       try {
         const response = await fetch(
-          "api\Lexumbourg.postman_collection30-12-22.json"
+          "https://lexumbourg.etradeverse.com/api/get_historical_palces"
         );
         const json = await response.json();
-        setData(json);
+        setData(json.data);
       } catch (e) {
         setError(e);
       } finally {
@@ -24,13 +24,21 @@ export const HomeScreen = () => {
     fetchData();
   }, []);
 
-  console.log("data = ==== :  ", data);
+  if (loading) {
+    return <Text>Loading....</Text>;
+  }
+
+  if (error) {
+    return <Text>An error occurred: {error.message}</Text>;
+  }
+
+  // console.log("data = for places   ==== :  ", data);
   return (
     <>
       <FlatList
-        data={[{ name: 1 }]}
-        renderItem={() => <AttractionInfoCard />}
-        keyExtractor={(item) => item.name}
+        data={data}
+        renderItem={(item) => <AttractionInfoCard item={item} />}
+        keyExtractor={(item) => item.id}
       />
     </>
   );

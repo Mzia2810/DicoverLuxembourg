@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { HomeScreen } from "../../features/screens/home.screen";
 import { MapScreen } from "../../features/screens/map.screen";
 import { FavoritesScreen } from "../../features/screens/favorites.screen";
+import EventScreen from "../../features/screens/EventScreen";
 import { AboutScreen } from "../../features/screens/about.screen";
 import { Searchbar } from "react-native-paper";
 import { StyledView, SafeArea } from "../../infrastracture/styles/view.style";
@@ -32,6 +33,8 @@ export const MainScreenNavigator = () => {
               iconName = "md-information";
             } else if (route.name === "Home") {
               iconName = "md-home";
+            } else if (route.name === "Event") {
+              iconName = "calendar";
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -49,6 +52,7 @@ export const MainScreenNavigator = () => {
           name="Map"
           component={MapScreen}
         />
+        <Tab.Screen name="Event" component={EventScreen} />
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
         <Tab.Screen name="About" component={AboutScreen} />
       </Tab.Navigator>
