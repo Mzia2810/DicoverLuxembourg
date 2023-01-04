@@ -66,7 +66,7 @@ export const AttractionInfoCard = ({ item }) => {
     const getData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("@newValeZi");
-        console.log("here is my data async daaaaa=", jsonValue);
+        // console.log("here is my data async daaaaa=", jsonValue);
       } catch (e) {
         console.log(e);
       }

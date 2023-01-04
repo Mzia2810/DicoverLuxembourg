@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { WelcomeScreen } from "../../features/screens/welcome.screen";
-
+import EventDetailScreen from "../../features/screens/EventDetailScreen";
 import { MainScreenNavigator } from "./main.screen.navigator";
 import {
   GelleFra,
@@ -39,9 +39,14 @@ export const AppNavigator = () => (
           component={GelleFra}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
           name="GrandDucalPalace"
           component={GrandDucalPalace}
+        />
+        <Stack.Screen
+          options={{ headerShown: true }}
+          name="EventDetailScreen"
+          component={EventDetailScreen}
         />
         <Stack.Screen
           options={{ headerShown: false }}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   Image,
@@ -13,7 +13,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Icon from "react-native-vector-icons/FontAwesome";
+// import Icon from "react-native-vector-icons/FontAwesome";
+import { FontAwesome } from "@expo/vector-icons";
 
 const DATA = [
   {
@@ -42,49 +43,122 @@ const DATA = [
   },
 ];
 
-const Item = ({ date, name, location, uri, title }) => (
-  <TouchableOpacity onPress={() => alert("Apply navigation code here")}>
+const Item = ({
+  id,
+  name,
+  address,
+  image,
+  description,
+  start_date,
+  navigation,
+}) => (
+  <TouchableOpacity
+    onPress={() =>
+      navigation.navigate("EventDetailScreen", {
+        id: id,
+        name: name,
+        address: address,
+        image: image,
+        description: description,
+        start_date: start_date,
+      })
+    }
+  >
     <View style={{ padding: wp("4%") }}>
-      <Image source={{ uri }} style={{ width: wp("93%"), height: hp("25%") }} />
+      <Image
+        source={{ uri: image[0] }}
+        style={{ width: wp("93%"), height: hp("25%") }}
+      />
       <View style={{ marginLeft: wp("3%") }}>
-        <Text style={styles.t1}>{date}</Text>
-        <Text style={styles.t3}>{title}</Text>
+        <Text style={styles.t1}>{name}</Text>
+        <Text style={styles.t3}>{name}</Text>
         <View style={{ flexDirection: "row" }}>
-          <Icon
-            name="rocket
-        "
-            size={25}
-          />
-          <Text style={styles.t2}>{location}</Text>
+          <FontAwesome style={{ marginTop: 5 }} name="address-book" size={20} />
+          {/* {console.log(image[0])} */}
+          <Text style={styles.t2}>{address?.streetAddress}</Text>
         </View>
-        <Text style={{ fontSize: wp("7%") }}>{name}</Text>
+        <Text style={{ fontSize: wp("5%") }}>{start_date}</Text>
       </View>
     </View>
   </TouchableOpacity>
 );
 
-function App() {
+const EventScreen = ({ navigation }) => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // console.log("data ===== Event ============= id ::", data[0].id);
+  // console.log("data ===== Event ============= name ::", data[0].name);
+  // console.log(
+  //   "data ===== Event ============= start_date ::",
+  //   data[0].start_date
+  // );
+  // console.log("data ===== Event ============= end_date::", data[0].end_date);
+  // console.log("data ===== Event ============= address ::", data[0].address);
+  // console.log("data ===== Event ============= iamge ::", data[0].image);
+  // console.log("data ===== Event ============= oofer ::", data[0].offer);
+  // console.log(
+  //   "data ===== Event ============= description ::",
+  //   data[0].description
+  // );
+  // console.log(
+  //   "data ===== Event ============= created_at::",
+  //   data[0].created_at
+  // );
+  // console.log(
+  //   "data ===== Event ============= update_at ::",
+  //   data[0].updated_at
+  // );
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          "https://lexumbourg.etradeverse.com/api/get_events"
+        );
+        const json = await response.json();
+        setData(json.data);
+        // console.log("data ===== Event ============= ::", json.data);
+      } catch (e) {
+        setError(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <Text>Loading....</Text>;
+  }
+
+  if (error) {
+    return <Text>An error occurred: {error.message}</Text>;
+  }
+
   const renderItem = ({ item }) => (
     <Item
       id={item.id}
       name={item.name}
-      location={item.location}
-      uri={item.uri}
-      date={item.date}
-      title={item.title}
+      address={item.address}
+      image={item.image}
+      start_date={item.start_date}
+      description={item.description}
+      navigation={navigation}
     />
   );
 
   return (
     <SafeAreaView>
       <FlatList
-        data={DATA}
+        data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   t1: {
     fontSize: wp("5.5%"),
@@ -102,4 +176,4 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-export default App;
+export default EventScreen;

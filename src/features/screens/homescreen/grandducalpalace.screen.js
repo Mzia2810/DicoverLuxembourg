@@ -7,37 +7,57 @@
 //   </>
 // );
 
-import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  Dimensions,
+} from "react-native";
 import React from "react";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+
+const { width, height } = Dimensions.get("window");
+
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.02;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const INITIAL_POSITION = {
+  latitude: 49.629056,
+  longitude: 6.120224,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+};
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import MapView from "react-native-maps";
+// import MapView from "react-native-maps";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ImageSlider from "react-native-image-slider";
 import { ScrollView } from "react-native-gesture-handler";
 
- const MapWithMarker = () => {
-  return (
-    <MapView
-      style={{ flex: 1 }}
-      initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
-    >
-      <MapView.Marker
-        coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-        title="My Marker"
-        description="This is my marker"
-      />
-    </MapView>
-  );
-};
+//  const MapWithMarker = () => {
+//   return (
+//     <MapView
+//       style={{ flex: 1 }}
+//       initialRegion={{
+//         latitude: 37.78825,
+//         longitude: -122.4324,
+//         latitudeDelta: 0.0922,
+//         longitudeDelta: 0.0421,
+//       }}
+//     >
+//       <MapView.Marker
+//         coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+//         title="My Marker"
+//         description="This is my marker"
+//       />
+//     </MapView>
+//   );
+// };
 
 export const GrandDucalPalace = ({ navigation, route }) => {
   const { name, image, address, description, created_at, updated_at, geo } =
@@ -86,57 +106,15 @@ export const GrandDucalPalace = ({ navigation, route }) => {
         <View style={styles.mapView}>
           <Text style={styles.secondViewTextStyle}>Map</Text>
 
-          {/* <MapWithMarker /> */}
+          <View style={{ flex: 1 }}>
+            <MapView
+              style={styles.map}
+              provider={PROVIDER_GOOGLE}
+              initialRegion={INITIAL_POSITION}
+            />
+          </View>
 
-          {/* <MapView
-            style={{ flex: 1 }}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <MapView.Marker
-              coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-              title="My Marker"
-              description="This is my marker"
-            />
-          </MapView> */}
-          {/* <MapView
-            style={{ flex: 1 }}
-            mapType="standard"
-            showsUserLocation={true}
-            showsMyLocationButton={true}
-            enableZoomControl={true}
-            initialRegion={geo}
-          >
-            <Marker
-              coordinate={geo}
-              title="Origin"
-              description="this is my description"
-              identifier="origin"
-            >
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  backgroundColor: "red",
-                  borderRadius: 50,
-                  opacity: 0.5,
-                }}
-              ></View>
-            </Marker>
-            <Marker
-              coordinate={geo}
-              title="Origin"
-              description="this is my description"
-              identifier="origin"
-              pinColor="blue"
-            />
-            <MarkerAnimated coordinate={geo} pinColor="green" />
-            <MarkerAnimated coordinate={geo} pinColor="orange" />
-          </MapView> */}
+       
         </View>
         <View style={{ height: hp("8%") }}></View>
       </ScrollView>
@@ -194,10 +172,54 @@ const styles = StyleSheet.create({
   },
   mapView: {
     width: wp("95%"),
-    height: hp("30%"),
+    height: hp("48%"),
     alignSelf: "center",
     top: wp("5%"),
     borderRadius: 5,
     overflow: "hidden",
   },
+  map: {
+    width: "100%",
+    height: "95%",
+    marginTop: 4,
+  },
 });
+
+// import React from "react";
+// import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+// import { Dimensions, StyleSheet, View } from "react-native";
+
+// const { width, height } = Dimensions.get("window");
+
+// const ASPECT_RATIO = width / height;
+// const LATITUDE_DELTA = 0.02;
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+// const INITIAL_POSITION = {
+//   latitude: 49.629056,
+//   longitude: 6.120224,
+//   latitudeDelta: LATITUDE_DELTA,
+//   longitudeDelta: LONGITUDE_DELTA,
+// };
+
+// export const MapScreen = () => (
+//   <>
+//     <View style={styles.container}>
+//       <MapView
+//         style={styles.map}
+//         provider={PROVIDER_GOOGLE}
+//         initialRegion={INITIAL_POSITION}
+//       />
+//     </View>
+//   </>
+// );
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   map: {
+//     width: "100%",
+//     height: "100%",
+//     marginTop: 4,
+//   },
+// });
