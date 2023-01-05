@@ -9,6 +9,9 @@ import {
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 import { AppNavigator } from "./src/infrastracture/navigation/app.navigator";
 
+import { store } from "./src/redux/store/Store";
+import { Provider } from "react-redux";
+
 export default function App() {
   const [oswaldLoaded] = useOswald({
     Oswald_400Regular,
@@ -24,10 +27,12 @@ export default function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <AppNavigator />
-      </ThemeProvider>
-      <ExpoStatusBar style="auto" />
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <AppNavigator />
+        </ThemeProvider>
+        <ExpoStatusBar style="auto" />
+      </Provider>
     </>
   );
 }
