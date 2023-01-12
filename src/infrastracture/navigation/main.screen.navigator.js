@@ -6,8 +6,9 @@ import { MapScreen } from "../../features/screens/map.screen";
 import { FavoritesScreen } from "../../features/screens/favorites.screen";
 import EventScreen from "../../features/screens/EventScreen";
 import { AboutScreen } from "../../features/screens/about.screen";
-import { Searchbar } from "react-native-paper";
+import { Provider, Searchbar } from "react-native-paper";
 import { StyledView, SafeArea } from "../../infrastracture/styles/view.style";
+import { FavouriteProvider } from "../../hooks/useFavourite";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,6 +54,7 @@ export const MainScreenNavigator = () => {
           component={MapScreen}
         />
         <Tab.Screen name="Event" component={EventScreen} />
+
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
         <Tab.Screen name="About" component={AboutScreen} />
       </Tab.Navigator>

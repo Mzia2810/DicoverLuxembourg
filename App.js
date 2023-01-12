@@ -2,15 +2,14 @@ import React from "react";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { theme } from "./src/infrastracture/theme";
 import { ThemeProvider } from "styled-components/native";
+import { Text } from "react-native";
 import {
   useFonts as useOswald,
   Oswald_400Regular,
 } from "@expo-google-fonts/oswald";
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 import { AppNavigator } from "./src/infrastracture/navigation/app.navigator";
-
-import { store } from "./src/redux/store/Store";
-import { Provider } from "react-redux";
+import { FavouriteProvider } from "./src/hooks/useFavourite";
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -27,12 +26,12 @@ export default function App() {
 
   return (
     <>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <FavouriteProvider>
           <AppNavigator />
-        </ThemeProvider>
-        <ExpoStatusBar style="auto" />
-      </Provider>
+        </FavouriteProvider>
+      </ThemeProvider>
+      <ExpoStatusBar style="auto" />
     </>
   );
 }

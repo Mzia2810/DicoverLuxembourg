@@ -62,6 +62,7 @@ export const MapScreen = () => {
               // );
               return (
                 <Marker
+                key={item.id}
                   coordinate={{
                     latitude: parseFloat(item.geo.latitude),
                     longitude: parseFloat(item.geo.longitude),

@@ -10,85 +10,17 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useFavourite from "../../hooks/useFavourite";
 
 export const AttractionInfoCard = ({ item }) => {
   const navigation = useNavigation();
-  const [iconColor, setIconColor] = useState("black");
-  const heart = <FontAwesome name="heart" size={25} color={iconColor} />;
+  const [iconColor, setIconColor] = useState(getcolor);
+  const heart = <FontAwesome name="heart" size={25} color={getcolor} />;
   const { id, name, geo, address, description, created_at, updated_at, image } =
     item.item;
 
   // console.log("id =============================== ", id);
-  const handleIcon = () => {
-
-    
-    if (iconColor === "black") {
-      setIconColor("red");
-    } else {
-      setIconColor("black");
-    }
-
-    const storeData = async () => {
-      try {
-        const jsonValue = JSON.stringify({
-          id: id,
-          name: name,
-          description: description,
-          image: image,
-          address: address,
-          geo: geo,
-          created_at: created_at,
-          updated_at: updated_at,
-        });
-        await AsyncStorage.setItem("@newValeZi", jsonValue);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    // const storeData = async () => {
-    //   try {
-    //     await AsyncStorage.setItem(
-    //       "@myKey",
-    //       "Muhammad"
-    //       // JSON.stringify({
-    //       //   key1: "value1",
-    //       //   key2: "value2",
-    //       // })
-    //     );
-    //     console.log("Stored successfuly");
-    //   } catch (e) {
-    //     // saving error
-    //     console.log(e);
-    //   }
-    // };
-
-    const getData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("@newValeZi");
-        // console.log("here is my data async daaaaa=", jsonValue);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    storeData();
-
-    getData();
-  };
-
-  // const getData = async () => {
-  //   console.log("get data f0erm");
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem("@myKey");
-  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-  // console.log(getData);
-
-  // console.log("my item name = ", getData);
+  const { data, getcolor, handleIcon, modifyArray } = useFavourite();
 
   // const {
   //   name = [
@@ -160,7 +92,18 @@ export const AttractionInfoCard = ({ item }) => {
           {/* {addressIcon} */}
         </StyledCardAddress>
         <TouchableOpacity
-          onPress={handleIcon}
+          onPress={() =>
+            modifyArray({
+              id,
+              name,
+              geo,
+              address,
+              description,
+              created_at,
+              updated_at,
+              image,
+            })
+          }
           style={{ width: 35, alignSelf: "flex-end" }}
         >
           <StyledCardIcon>{heart}</StyledCardIcon>

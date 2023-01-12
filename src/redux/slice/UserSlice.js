@@ -1,33 +1,38 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import axios from "axios";
 
-const initialState = {
-  entities: [],
-  loading: false,
-};
-
-const getPosts = createAsyncThunk(
-  //action type string
-  "posts/getPosts",
-  // callback function
-  async (thunkAPI) => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/posts").then(
-      (data) => data.json()
-    );
-    return res;
-  }
-);
-
-export const postSlice = createSlice({
-  name: "posts",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getPosts.fulfilled, (state, action) => {
-      // Add user to the state array
-      state.entities.push(action.payload);
-    });
+// export const getUsers = createAsyncThunk("users/getUsers", async () => {
+//   const response = await axios.get(
+//     "https://jsonplaceholder.typicode.com/users"
+//   );
+//   return response.data;
+// });
+export const usersSlice = createSlice({
+  name: "users",
+  initialState: {
+    data: [],
+    loading: "idle",
+    error: null,
   },
+  reducers: {},
+  // extraReducers: (builder) => {
+  //   builder.addCase(getUsers.pending, (state, action) => {
+  //     if (state.loading === "idle") {
+  //       state.loading = "pending";
+  //     }
+  //   });
+  //   builder.addCase(getUsers.fulfilled, (state, action) => {
+  //     if (state.loading === "pending") {
+  //       state.data = action.payload;
+  //       state.loading = "idle";
+  //     }
+  //   });
+  //   builder.addCase(getUsers.rejected, (state, action) => {
+  //     if (state.loading === "pending") {
+  //       state.loading = "idle";
+  //       state.error = "Error occured";
+  //     }
+  //   });
+  // },
 });
-
-export default postSlice.reducer;
+export default usersSlice.reducer;
