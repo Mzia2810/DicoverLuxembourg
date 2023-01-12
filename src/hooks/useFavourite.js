@@ -6,33 +6,33 @@ const FavContext = createContext();
 
 export const FavouriteProvider = ({ children }) => {
   const [user, setUser] = useState("Muhammad");
-  // const [color, setColor] = useState("black");
+  const [color, setColor] = useState("black");
 
   // create function here
 
   const [data, setData] = useState([{}]);
 
-  console.log("here is my data ::::::::::::::::::::::::::", data);
-  // const dispatch = useDispatch();
-  // const { data, loading, error } = useSelector((state) => state.users);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     dispatch(getUsers());
-  //   }, 5000);
-  // }, []);
+  // console.log("here is my data ::::::::::::::::::::::::::", data);
 
-  // if (loading === "idle") return <p>Loading...</p>;
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [fetchResponse, setFetchResponse] = useState(null);
 
-  const getcolor = (id) => {
-    let color = "red";
-    console.log("my color");
-    data.map((item) => {
-      if (item.id == id) {
-        color = "red";
-        // return color;
-      }
-    });
-    return color;
+  const [searchItem, setSearchItem] = useState("");
+  const [filterData, setFilterData] = useState([]);
+
+  const SearchText = (searchItem) => {
+    setSearchItem(searchItem);
+
+    const searchedData = fetchResponse.filter((item) =>
+      item?.name?.trim().toLowerCase().includes(searchItem.trim().toLowerCase())
+    );
+    setFilterData(searchedData);
+    console.log(searchedData);
+
+    if (!searchItem || searchItem === "") {
+      setFilterData(fetchResponse);
+    }
   };
 
   const handleIcon = ({
@@ -45,37 +45,11 @@ export const FavouriteProvider = ({ children }) => {
     updated_at,
     image,
   }) => {
-    // if (iconColor === "black") {
-    //   setIconColor("red");
-    // } else {
-    //   setIconColor("black");
-    // }
-    // console.log("dani data=", {
-    //   id,
-    //   name,
-    //   geo,
-    //   address,
-    //   description,
-    //   created_at,
-    //   updated_at,
-    //   image,
-    // });
-
     let newarray = data;
-    const myitem = {
-      id,
-      name,
-      geo,
-      address,
-      description,
-      created_at,
-      updated_at,
-      image,
-    };
-    // const result = [];
+
     if (newarray != null) {
+      setColor("red");
       const itemdata = newarray.find((item) => item.id == id);
-      console.log("my item data=", itemdata);
       if (itemdata != undefined) {
         newarray = newarray.filter((ele) => ele.id != id);
 
@@ -113,7 +87,6 @@ export const FavouriteProvider = ({ children }) => {
       });
       setData(newarray);
       console.log("removed second == ");
-      // console.log("after Data is  Pushed in Async ===== :::  ", newarray);
     }
 
     const arrayOfObjectsString2 = JSON.stringify(newarray);
@@ -128,8 +101,6 @@ export const FavouriteProvider = ({ children }) => {
   };
 
   function modifyArray(obj) {
-    // Create object array
-
     // Pass array to new variable
     let newArray = [...data];
 
@@ -189,11 +160,35 @@ export const FavouriteProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          "https://lexumbourg.etradeverse.com/api/get_historical_palces"
+        );
+        const json = await response.json();
+        setFetchResponse(json.data);
+        setFilterData(json.data);
+      } catch (e) {
+        setError(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
     getData();
   }, []);
 
   return (
-    <FavContext.Provider value={{ data, getcolor, handleIcon, modifyArray }}>
+    <FavContext.Provider
+      value={{
+        data,
+        handleIcon,
+        modifyArray,
+        fetchResponse,
+        SearchText,
+        filterData,
+      }}
+    >
       {children}
     </FavContext.Provider>
   );

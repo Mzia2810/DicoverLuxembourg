@@ -6,7 +6,7 @@ import useFavourite from "../../hooks/useFavourite";
 
 export const FavoritesScreen = () => {
   const { data } = useFavourite();
-  console.log("this is our user from Context ::", data);
+  // console.log("this is our user from Context ::", data);
 
   return (
     <>

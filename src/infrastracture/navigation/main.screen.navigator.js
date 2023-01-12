@@ -8,16 +8,20 @@ import EventScreen from "../../features/screens/EventScreen";
 import { AboutScreen } from "../../features/screens/about.screen";
 import { Provider, Searchbar } from "react-native-paper";
 import { StyledView, SafeArea } from "../../infrastracture/styles/view.style";
-import { FavouriteProvider } from "../../hooks/useFavourite";
+import useFavourite, { FavouriteProvider } from "../../hooks/useFavourite";
 
 const Tab = createBottomTabNavigator();
 
 export const MainScreenNavigator = () => {
+  const { searchItem, SearchText } = useFavourite();
   return (
     <>
       <SafeArea>
         <StyledView>
-          <Searchbar />
+          <Searchbar
+            value={searchItem}
+            onChangeText={(val) => SearchText(val)}
+          />
         </StyledView>
       </SafeArea>
       <Tab.Navigator
