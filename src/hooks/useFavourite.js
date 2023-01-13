@@ -6,7 +6,7 @@ const FavContext = createContext();
 
 export const FavouriteProvider = ({ children }) => {
   const [user, setUser] = useState("Muhammad");
-  const [color, setColor] = useState("black");
+  const [iconColor, setIconColor] = useState("red");
 
   // create function here
 
@@ -20,18 +20,35 @@ export const FavouriteProvider = ({ children }) => {
 
   const [searchItem, setSearchItem] = useState("");
   const [filterData, setFilterData] = useState([]);
+  const [filterDataFav, setFilterDataFav] = useState([]);
+
+  // console.log("Here is my Filter favourite data", filterDataFav);
 
   const SearchText = (searchItem) => {
     setSearchItem(searchItem);
-
+    // console.log(searchItem);
     const searchedData = fetchResponse.filter((item) =>
       item?.name?.trim().toLowerCase().includes(searchItem.trim().toLowerCase())
     );
     setFilterData(searchedData);
     console.log(searchedData);
-
     if (!searchItem || searchItem === "") {
       setFilterData(fetchResponse);
+    }
+  };
+
+  // ..............................................................
+
+  const SearchFavouriteItem = (search) => {
+    setSearchItem(search);
+    console.log("search =======   :::::::   ", search);
+    const searchedFav = data.filter((item) =>
+      item?.name?.trim().toLowerCase().includes(search.trim().toLowerCase())
+    );
+    setFilterDataFav(searchedFav);
+    console.log("searched Fav ==========  ::::::   ", searchedFav);
+    if (!search || search === "") {
+      setFilterDataFav(data);
     }
   };
 
@@ -48,11 +65,11 @@ export const FavouriteProvider = ({ children }) => {
     let newarray = data;
 
     if (newarray != null) {
-      setColor("red");
+      // setColor("red");
       const itemdata = newarray.find((item) => item.id == id);
       if (itemdata != undefined) {
         newarray = newarray.filter((ele) => ele.id != id);
-
+        // setIconColor("black");
         setData(newarray);
         console.log("removed item == ", newarray);
         alert(JSON.stringify(itemdata));
@@ -69,6 +86,7 @@ export const FavouriteProvider = ({ children }) => {
           image,
         });
         setData(newarray);
+        setIconColor("red");
         console.log("removed second == ");
         // console.log("after Data is  Pushed in Async ===== :::  ", newarray);
       }
@@ -88,16 +106,19 @@ export const FavouriteProvider = ({ children }) => {
       setData(newarray);
       console.log("removed second == ");
     }
-
+    // if (iconColor === "black") {
     const arrayOfObjectsString2 = JSON.stringify(newarray);
 
     AsyncStorage.setItem("danyalnewapp", arrayOfObjectsString2)
       .then(() => {
+        setFilterDataFav(arrayOfObjectsString2);
         console.log("Array of objects saved in Async Storage");
       })
       .catch((error) => {
         console.error(error);
       });
+    setIconColor("red");
+    // }
   };
 
   function modifyArray(obj) {
@@ -128,12 +149,15 @@ export const FavouriteProvider = ({ children }) => {
     }
     console.log(newArray);
     setData(newArray);
-
+    setFilterDataFav(newArray);
     const arrayOfObjectsString2 = JSON.stringify(newArray);
 
     AsyncStorage.setItem("danyalnewapp", arrayOfObjectsString2)
       .then(() => {
-        console.log("Array of objects saved in Async Storage");
+        console.log(
+          "Array of objects saved in Async Storage",
+          arrayOfObjectsString2
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -151,6 +175,7 @@ export const FavouriteProvider = ({ children }) => {
           setData([]);
         } else {
           setData(arrayOfObjects);
+          setFilterDataFav(arrayOfObjects);
         }
         console.log(arrayOfObjects);
       })
@@ -187,6 +212,10 @@ export const FavouriteProvider = ({ children }) => {
         fetchResponse,
         SearchText,
         filterData,
+        iconColor,
+        setIconColor,
+        SearchFavouriteItem,
+        filterDataFav,
       }}
     >
       {children}

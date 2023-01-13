@@ -16,7 +16,7 @@ import {
   Dimensions,
 } from "react-native";
 import React from "react";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const { width, height } = Dimensions.get("window");
 
@@ -60,10 +60,10 @@ import { ScrollView } from "react-native-gesture-handler";
 // };
 
 export const GrandDucalPalace = ({ navigation, route }) => {
-  const { name, image, address, description, created_at, updated_at, geo } =
+  const { id, name, image, address, description, created_at, updated_at, geo } =
     route.params;
 
-  // console.log("name == ", name);
+  console.log("name == ", route.params.geo);
   // console.log("image == ", image);
   // console.log("name == ", address);
   // console.log("name == ", created_at);
@@ -111,10 +111,19 @@ export const GrandDucalPalace = ({ navigation, route }) => {
               style={styles.map}
               provider={PROVIDER_GOOGLE}
               initialRegion={INITIAL_POSITION}
-            />
+            >
+              <Marker
+                key={id}
+                coordinate={{
+                  latitude: parseFloat(geo.latitude),
+                  longitude: parseFloat(geo.longitude),
+                }}
+                title={name}
+                description={description}
+                identifier={name}
+              />
+            </MapView>
           </View>
-
-       
         </View>
         <View style={{ height: hp("8%") }}></View>
       </ScrollView>

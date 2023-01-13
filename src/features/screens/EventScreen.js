@@ -88,28 +88,8 @@ const EventScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // console.log("data ===== Event ============= id ::", data[0].id);
+  // console.log("data ===== Event ============= image ::", data[0].image);
   // console.log("data ===== Event ============= name ::", data[0].name);
-  // console.log(
-  //   "data ===== Event ============= start_date ::",
-  //   data[0].start_date
-  // );
-  // console.log("data ===== Event ============= end_date::", data[0].end_date);
-  // console.log("data ===== Event ============= address ::", data[0].address);
-  // console.log("data ===== Event ============= iamge ::", data[0].image);
-  // console.log("data ===== Event ============= oofer ::", data[0].offer);
-  // console.log(
-  //   "data ===== Event ============= description ::",
-  //   data[0].description
-  // );
-  // console.log(
-  //   "data ===== Event ============= created_at::",
-  //   data[0].created_at
-  // );
-  // console.log(
-  //   "data ===== Event ============= update_at ::",
-  //   data[0].updated_at
-  // );
 
   useEffect(() => {
     async function fetchData() {

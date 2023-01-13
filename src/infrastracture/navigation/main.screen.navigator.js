@@ -17,12 +17,12 @@ export const MainScreenNavigator = () => {
   return (
     <>
       <SafeArea>
-        <StyledView>
+        {/* <StyledView>
           <Searchbar
             value={searchItem}
             onChangeText={(val) => SearchText(val)}
           />
-        </StyledView>
+        </StyledView> */}
       </SafeArea>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -60,7 +60,7 @@ export const MainScreenNavigator = () => {
         <Tab.Screen name="Event" component={EventScreen} />
 
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
-        <Tab.Screen name="About" component={AboutScreen} />
+        {/* <Tab.Screen name="About" component={AboutScreen} /> */}
       </Tab.Navigator>
     </>
   );
