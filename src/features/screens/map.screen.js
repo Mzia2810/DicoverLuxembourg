@@ -19,7 +19,6 @@ export const MapScreen = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -52,6 +51,7 @@ export const MapScreen = () => {
           style={styles.map}
           provider={PROVIDER_GOOGLE}
           initialRegion={INITIAL_POSITION}
+          // key="AIzaSyAijpdX6WhDyX-IK9MQgvxHeeORqM_ERhg"
         >
           {data.map((item) => {
             if (item.geo != null) {
@@ -62,7 +62,7 @@ export const MapScreen = () => {
               // );
               return (
                 <Marker
-                key={item.id}
+                  key={item.id}
                   coordinate={{
                     latitude: parseFloat(item.geo.latitude),
                     longitude: parseFloat(item.geo.longitude),
