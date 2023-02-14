@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -51,37 +52,65 @@ const Item = ({
   description,
   start_date,
   navigation,
-}) => (
-  <TouchableOpacity
-    onPress={() =>
-      navigation.navigate("EventDetailScreen", {
-        id: id,
-        name: name,
-        address: address,
-        image: image,
-        description: description,
-        start_date: start_date,
-      })
-    }
-  >
-    <View style={{ padding: wp("4%") }}>
-      <Image
-        source={{ uri: image[0] }}
-        style={{ width: wp("93%"), height: hp("25%") }}
-      />
-      <View style={{ marginLeft: wp("3%") }}>
-        <Text style={styles.t1}>{name}</Text>
-        <Text style={styles.t3}>{name}</Text>
-        <View style={{ flexDirection: "row" }}>
-          <FontAwesome style={{ marginTop: 5 }} name="address-book" size={20} />
-          {/* {console.log(image[0])} */}
-          <Text style={styles.t2}>{address?.streetAddress}</Text>
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const removeString = (string) => {
+    const val = string.split("//")[0];
+    console.log("Val is :: ", val);
+
+    return val;
+  };
+
+  useEffect(() => {
+    const imageLoad = Image.prefetch(image[0]);
+    imageLoad.then(() => setIsLoading(false));
+  }, [image[0]]);
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("EventDetailScreen", {
+          id: id,
+          name: name,
+          address: address,
+          image: image,
+          description: description,
+          start_date: start_date,
+        })
+      }
+    >
+      <View style={{ padding: wp("4%") }}>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Image
+            source={{ uri: image[0] }}
+            style={{ width: wp("93%"), height: hp("25%") }}
+          />
+        )}
+
+        <View style={{ marginLeft: wp("3%") }}>
+          <Text style={styles.t1}>{console.log(name)}</Text>
+          <Text style={styles.t3}>{name}</Text>
+          <View style={{ flexDirection: "row" }}>
+            <FontAwesome
+              style={{ marginTop: 5 }}
+              name="address-book"
+              size={20}
+            />
+
+            {/* {console.log(image[0])} */}
+            <Text style={styles.t2}>
+              {removeString(address?.streetAddress)}
+              {/* {address?.streetAddress} */}
+            </Text>
+          </View>
+          <Text style={{ fontSize: wp("5%") }}>{start_date}</Text>
         </View>
-        <Text style={{ fontSize: wp("5%") }}>{start_date}</Text>
       </View>
-    </View>
-  </TouchableOpacity>
-);
+    </TouchableOpacity>
+  );
+};
 
 const EventScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
@@ -99,7 +128,7 @@ const EventScreen = ({ navigation }) => {
         );
         const json = await response.json();
         setData(json.data);
-        // console.log("data ===== Event ============= ::", json.data);
+        // console.log("data ===== Event list  ============= ::", json.data);
       } catch (e) {
         setError(e);
       } finally {
@@ -117,17 +146,20 @@ const EventScreen = ({ navigation }) => {
     return <Text>An error occurred: {error.message}</Text>;
   }
 
-  const renderItem = ({ item }) => (
-    <Item
-      id={item.id}
-      name={item.name}
-      address={item.address}
-      image={item.image}
-      start_date={item.start_date}
-      description={item.description}
-      navigation={navigation}
-    />
-  );
+  const renderItem = ({ item }) => {
+    console.log("Hrer  is item     ::  ", item);
+    return (
+      <Item
+        id={item.id}
+        name={item.name}
+        address={item.address}
+        image={item.image}
+        start_date={item.start_date}
+        description={item.description}
+        navigation={navigation}
+      />
+    );
+  };
 
   return (
     <SafeAreaView>

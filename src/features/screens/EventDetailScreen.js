@@ -27,6 +27,13 @@ const EventDetailScreen = ({ route }) => {
 
   //   console.log("Imagee  ==============   ::", image);
 
+  const removeString = (string) => {
+    const val = string.split("//")[0];
+    console.log("Val is :: ", val);
+
+    return val;
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -46,7 +53,9 @@ const EventDetailScreen = ({ route }) => {
               size={20}
             />
             <Text style={styles.t4}>Address</Text>
-            <Text style={styles.t5}>{address?.streetAddress}</Text>
+            <Text style={styles.t5}>
+              {removeString(address?.streetAddress)}
+            </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
             <Fontisto style={{ marginTop: 3 }} name="date" size={20} />

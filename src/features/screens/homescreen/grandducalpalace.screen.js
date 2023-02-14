@@ -1,12 +1,3 @@
-// import React from "react";
-// import { Text } from "react-native";
-
-// export const FavoritesScreen = () => (
-//   <>
-//     <Text>my Favorites Screen</Text>
-//   </>
-// );
-
 import {
   StyleSheet,
   Text,
@@ -15,8 +6,16 @@ import {
   SafeAreaView,
   Dimensions,
 } from "react-native";
-import React from "react";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import React, { useState } from "react";
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  Polyline,
+  Callout,
+} from "react-native-maps";
+import { decode } from "@mapbox/polyline"; //please install this package before running!
+// import Geolocation from "@react-native-community/geolocation";
+import * as Location from "expo-location";
 
 const { width, height } = Dimensions.get("window");
 
@@ -38,44 +37,109 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ImageSlider from "react-native-image-slider";
 import { ScrollView } from "react-native-gesture-handler";
-
-//  const MapWithMarker = () => {
-//   return (
-//     <MapView
-//       style={{ flex: 1 }}
-//       initialRegion={{
-//         latitude: 37.78825,
-//         longitude: -122.4324,
-//         latitudeDelta: 0.0922,
-//         longitudeDelta: 0.0421,
-//       }}
-//     >
-//       <MapView.Marker
-//         coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-//         title="My Marker"
-//         description="This is my marker"
-//       />
-//     </MapView>
-//   );
-// };
+import { useEffect } from "react";
+import MapViewDirections from "react-native-maps-directions";
 
 export const GrandDucalPalace = ({ navigation, route }) => {
+  const [coords, setCoords] = useState([]);
   const { id, name, image, address, description, created_at, updated_at, geo } =
     route.params;
+  const [location, setLocation] = useState(null);
+  // const [coordinate, setCoordinate] = useState({
+  //   latitude: 37.78825,
+  //   longitude: -122.4324,
+  // });
 
-  console.log("name == ", route.params.geo);
-  // console.log("image == ", image);
-  // console.log("name == ", address);
-  // console.log("name == ", created_at);
-  // console.log("name == ", updated_at);
-  // console.log("geo  ====  == ", geo);
-  // console.log("name == ", description);
+  // const [initialPosition, setInitialPosition] = useState(INITIAL_POSITION);
 
-  const [images, setImages] = React.useState([
-    "https://source.unsplash.com/1024x768/?nature",
-    "https://source.unsplash.com/1024x768/?water",
-    "https://source.unsplash.com/1024x768/?tree",
-  ]);
+  const origin = { latitude: geo.latitude, longitude: geo.longitude };
+  const destination = {
+    latitude: 49.612429922729206,
+    longitude: 6.133821654146095,
+  };
+  const GOOGLE_MAPS_APIKEY = "AIzaSyAijpdX6WhDyX-IK9MQgvxHeeORqM_ERhg";
+
+  // useEffect(() => {
+  //   Geolocation.getCurrentPosition(
+  //     (position) => {
+  //       setInitialPosition({
+  //         latitude: position.coords.latitude,
+  //         longitude: position.coords.longitude,
+  //         latitudeDelta: 0.0922,
+  //         longitudeDelta: 0.0421,
+  //       });
+  //     },
+  //     (error) => console.log(error),
+  //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+  //   );
+  // }, []);
+
+  // useEffect(() => {
+  //   Geolocation.getCurrentPosition(
+  //     (position) => {
+  //       setCoordinate({
+  //         latitude: position.coords.latitude,
+  //         longitude: position.coords.longitude,
+  //       });
+  //     },
+  //     (error) => console.log(error),
+  //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+  //   );
+  // }, []);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+    })();
+  }, []);
+
+  if (!location) {
+    return (
+      <View style={styles.container}>
+        <Text>Waiting for location...</Text>
+      </View>
+    );
+  }
+  // const getDirections = async (startLoc, destinationLoc) => {
+  //   try {
+  //     const Key = "AIzaSyAijpdX6WhDyX-IK9MQgvxHeeORqM_ERhg"; //put your API key here.
+  //     //otherwise, you'll have an 'unauthorized' error.
+  //     let resp = await fetch(
+  //       `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${Key}`
+  //     );
+  //     let respJson = await resp.json();
+  //     let points = decode(respJson.routes[0].overview_polyline.points);
+  //     console.log(points);
+  //     let coords = points.map((point, index) => {
+  //       return {
+  //         latitude: point[0],
+  //         longitude: point[1],
+  //       };
+  //     });
+  //     return coords;
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   //fetch the coordinates and then store its value into the coords Hook.
+  //   getDirections("52.5200066,13.404954", "50.1109221,8.6821267")
+  //     .then((coords) => setCoords(coords))
+  //     .catch((err) => console.log("Something went wrong"));
+  // }, []);
+
+  // const [images, setImages] = React.useState([
+  //   "https://source.unsplash.com/1024x768/?nature",
+  //   "https://source.unsplash.com/1024x768/?water",
+  //   "https://source.unsplash.com/1024x768/?tree",
+  // ]);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
@@ -111,6 +175,9 @@ export const GrandDucalPalace = ({ navigation, route }) => {
               style={styles.map}
               provider={PROVIDER_GOOGLE}
               initialRegion={INITIAL_POSITION}
+              // initialRegion={initialPosition}
+              showsUserLocation
+              loadingEnabled
             >
               <Marker
                 key={id}
@@ -122,6 +189,25 @@ export const GrandDucalPalace = ({ navigation, route }) => {
                 description={description}
                 identifier={name}
               />
+              <MapViewDirections
+                // initialPosition={INITIAL_POSITION}
+                origin={{
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                }}
+                destination={destination}
+                apikey={GOOGLE_MAPS_APIKEY}
+                strokeWidth={12}
+                mode="WALKING"
+                resetOnChange={true}
+                timePrecision="none"
+                language="en"
+                strokeColor={"red"}
+                // splitWaypoints={3}
+                // coordinate={coordinate}
+              />
+
+              {/* {coords.length > 0 && <Polyline coordinates={coords} />} */}
             </MapView>
           </View>
         </View>
@@ -191,6 +277,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "95%",
     marginTop: 4,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

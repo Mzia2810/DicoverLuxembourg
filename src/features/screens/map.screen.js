@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Dimensions, StyleSheet, View, Text } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,9 +17,17 @@ const INITIAL_POSITION = {
 };
 
 export const MapScreen = () => {
+  const navigation = useNavigation();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // console.log("data from Map :::  ", data);
+
+  const navigateToClickedScreen = () => {
+    navigation.navigate("GrandDucalPalace", { data: data });
+    console.log("I am clicked : ");
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -61,16 +71,30 @@ export const MapScreen = () => {
               //   item.geo.longitude
               // );
               return (
-                <Marker
-                  key={item.id}
-                  coordinate={{
-                    latitude: parseFloat(item.geo.latitude),
-                    longitude: parseFloat(item.geo.longitude),
-                  }}
-                  title={item.name}
-                  description={item.description}
-                  identifier={item.name}
-                />
+                <>
+                  <Marker
+                    key={item.id}
+                    onPress={() => {
+                      navigation.navigate("GrandDucalPalace", {
+                        name: item.name,
+                        description: item.description,
+                        image: item.image,
+                        address: item.address,
+                        created_at: item.created_at,
+                        updated_at: item.updated_at,
+                        geo: item.geo,
+                      });
+                      console.log(item.geo.latitude, item.geo.longitude);
+                    }}
+                    coordinate={{
+                      latitude: parseFloat(item.geo.latitude),
+                      longitude: parseFloat(item.geo.longitude),
+                    }}
+                    title={item.name}
+                    description={item.description}
+                    identifier={item.name}
+                  />
+                </>
               );
             }
           })}

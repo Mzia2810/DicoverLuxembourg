@@ -20,6 +20,9 @@ export const AttractionInfoCard = ({ item }) => {
   const heart = <FontAwesome name="heart" size={25} color={iconColor} />;
   const { id, name, geo, address, description, created_at, updated_at, image } =
     item.item;
+
+  console.log(address);
+
   useEffect(() => {
     const isInArray = data.some((item) => item.id === id);
     if (isInArray) {
@@ -30,11 +33,10 @@ export const AttractionInfoCard = ({ item }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-
   return (
     <>
       {/* First Card Grand Ducal Palace */}
-      
+
       <StyledAttractionCard>
         <TouchableOpacity
           onPress={() =>
@@ -58,6 +60,12 @@ export const AttractionInfoCard = ({ item }) => {
         <StyledCardTitle>{name}</StyledCardTitle>
         <StyledCardAddress>
           {address && address.addressCountry}
+          {/* {addressIcon} */}
+        </StyledCardAddress>
+        <StyledCardAddress>
+          <FontAwesome name="map-marker" size={15} />{" "}
+          {address && address.addressLocality}{" "}
+          {address && address.streetAddress}
           {/* {addressIcon} */}
         </StyledCardAddress>
         <TouchableOpacity
