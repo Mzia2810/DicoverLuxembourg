@@ -57,7 +57,7 @@ export const GrandDucalPalace = ({ navigation, route }) => {
     latitude: 49.612429922729206,
     longitude: 6.133821654146095,
   };
-  const GOOGLE_MAPS_APIKEY = "AIzaSyAijpdX6WhDyX-IK9MQgvxHeeORqM_ERhg";
+  const GOOGLE_MAPS_APIKEY = "AIzaSyApOLEiffXXZNBEiWItoZzgr1hjYxrbJpI";
 
   // useEffect(() => {
   //   Geolocation.getCurrentPosition(
@@ -198,7 +198,7 @@ export const GrandDucalPalace = ({ navigation, route }) => {
                 destination={destination}
                 apikey={GOOGLE_MAPS_APIKEY}
                 strokeWidth={12}
-                mode="WALKING"
+                mode="DRIVING"
                 resetOnChange={true}
                 timePrecision="none"
                 language="en"
