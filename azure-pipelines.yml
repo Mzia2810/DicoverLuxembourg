@@ -1,0 +1,64 @@
+trigger:
+  - main1  # tumhara branch
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '16.x'           # Compatible with Expo v47
+  EXPO_CLI_VERSION: '5.0.1'
+
+steps:
+
+# 1️⃣ Checkout code
+- checkout: self
+
+# 2️⃣ Install Node.js 16 LTS
+- task: NodeTool@0
+  inputs:
+    versionSpec: '$(NODE_VERSION)'
+  displayName: 'Install Node.js'
+
+# 3️⃣ Install Expo CLI globally
+- script: |
+    npm install -g expo-cli@$(EXPO_CLI_VERSION)
+  displayName: 'Install Expo CLI'
+
+# 4️⃣ Install project dependencies and web packages
+- script: |
+    # Clean install
+    rm -rf node_modules package-lock.json
+    # Install project dependencies ignoring peer dependency conflicts
+    npm install --legacy-peer-deps
+    # Install react-native-web and correct react-dom for web build
+    npm install react-native-web react-dom@18.1.0 --legacy-peer-deps
+  displayName: 'Install Dependencies + Web Packages'
+# 4️⃣ Install project dependencies (ignore peer dependency conflicts)
+- script: |
+    npm install react-native-web react-dom@18.1.0 --legacy-peer-deps
+  displayName: 'Install Dependencies (legacy peer deps)'
+# 5️⃣ Build Expo Web App
+- script: |
+    expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+    expo build:web
+  displayName: 'Build Web App'
+  env:
+    EXPO_USERNAME: $(EXPO_USERNAME)   # Secret variable in Azure DevOps
+    EXPO_PASSWORD: $(EXPO_PASSWORD)   # Secret variable in Azure DevOps
+
+# 6️⃣ Publish Build Artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'web-build'        # Expo web output folder
+    ArtifactName: 'web-app-artifact'
+    publishLocation: 'Container'
+  displayName: 'Publish Build Artifact'
+
+# 7️⃣ Deploy Artifact to Azure App Service
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'DicoverLuxembourg'  # Azure service connection
+    appName: 'DicoverLuxembourg'            # App Service name
+    package: '$(Pipeline.Workspace)/web-app-artifact'
+    runtimeStack: 'NODE|16-lts'
+  displayName: 'Deploy Artifact to Azure App Service'
