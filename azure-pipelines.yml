@@ -24,19 +24,21 @@ steps:
     npm install -g expo-cli@$(EXPO_CLI_VERSION)
   displayName: 'Install Expo CLI'
 
-# 4️⃣ Install project dependencies and web packages
+# 4️⃣ Install project dependencies with fixed versions
 - script: |
-    # Clean install
-    rm -rf node_modules package-lock.json
-    # Install project dependencies ignoring peer dependency conflicts
-    npm install --legacy-peer-deps
-    # Install react-native-web and correct react-dom for web build
-    npm install react-native-web react-dom@18.1.0 --legacy-peer-deps
-  displayName: 'Install Dependencies + Web Packages'
-# 4️⃣ Install project dependencies (ignore peer dependency conflicts)
-- script: |
-    npm install react-native-web react-dom@18.1.0 --legacy-peer-deps
-  displayName: 'Install Dependencies (legacy peer deps)'
+    # Clean previous installs
+    rm -rf node_modules package-lock.json yarn.lock
+    # Install project dependencies + web compatible packages
+    npm install \
+      react@18.1.0 \
+      react-dom@18.1.0 \
+      react-native@0.70.5 \
+      react-native-web@0.18.10 \
+      react-native-gesture-handler@2.8.0 \
+      styled-components@5.3.6 \
+      --legacy-peer-deps
+  displayName: 'Install Dependencies + Web Packages (Fixed Versions)'
+
 # 5️⃣ Build Expo Web App
 - script: |
     expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
