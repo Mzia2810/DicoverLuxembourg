@@ -26,9 +26,7 @@ steps:
 
 # 4️⃣ Install project dependencies with fixed versions
 - script: |
-    # Clean previous installs
     rm -rf node_modules package-lock.json yarn.lock
-    # Install project dependencies + web compatible packages
     npm install \
       react@18.1.0 \
       react-dom@18.1.0 \
@@ -45,22 +43,14 @@ steps:
     expo build:web
   displayName: 'Build Web App'
   env:
-    EXPO_USERNAME: $(EXPO_USERNAME)   # Secret variable in Azure DevOps
-    EXPO_PASSWORD: $(EXPO_PASSWORD)   # Secret variable in Azure DevOps
+    EXPO_USERNAME: $(EXPO_USERNAME)
+    EXPO_PASSWORD: $(EXPO_PASSWORD)
 
-# 6️⃣ Publish Build Artifact
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: 'web-build'        # Expo web output folder
-    ArtifactName: 'web-app-artifact'
-    publishLocation: 'Container'
-  displayName: 'Publish Build Artifact'
-
-# 7️⃣ Deploy Artifact to Azure App Service
+# 6️⃣ Deploy Web Build directly to Azure App Service
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'DicoverLuxembourg'  # Azure service connection
-    appName: 'DicoverLuxembourg'            # App Service name
-    package: '$(Pipeline.Workspace)/web-app-artifact/web-build'
+    azureSubscription: 'DicoverLuxembourg'
+    appName: 'DicoverLuxembourg'
+    package: '$(Build.SourcesDirectory)/web-build'  # Correct path
     runtimeStack: 'NODE|16-lts'
-  displayName: 'Deploy Artifact to Azure App Service'
+  displayName: 'Deploy Web App to Azure App Service'
