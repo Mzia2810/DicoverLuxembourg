@@ -61,6 +61,6 @@ steps:
   inputs:
     azureSubscription: 'DicoverLuxembourg'  # Azure service connection
     appName: 'DicoverLuxembourg'            # App Service name
-    package: '$(Pipeline.Workspace)/web-app-artifact'
+    package: '$(Pipeline.Workspace)/web-app-artifact/web-build'
     runtimeStack: 'NODE|16-lts'
   displayName: 'Deploy Artifact to Azure App Service'
